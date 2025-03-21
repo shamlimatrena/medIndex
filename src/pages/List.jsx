@@ -5,7 +5,7 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
+  Grid2,
 } from "@mui/material";
 
 const dummyMedicines = [
@@ -84,55 +84,67 @@ const MedicineIndexApp = () => {
   );
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Typography variant="h4" gutterBottom>
-        Medicine Index
-      </Typography>
-      <TextField
-        fullWidth
-        label="Search by name or generic name..."
-        variant="outlined"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: "20px" }}
-      />
-      {isAdmin && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddMedicine}
-          style={{ marginBottom: "20px" }}
+    <>
+      <div style={{ padding: "20px" }}>
+        <Typography variant="h4" gutterBottom>
+          Medicine Index
+        </Typography>
+        <div
+          style={{
+            position: "sticky",
+            top: 0,
+            background: "white",
+            zIndex: 1000,
+            paddingBottom: "10px",
+          }}
         >
-          Add Medicine
-        </Button>
-      )}
-      <Grid container spacing={3}>
-        {filteredMedicines.map((med, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6">{med.name}</Typography>
-                <Typography>
-                  <strong>Generic Name:</strong> {med.genericName}
-                </Typography>
-                <Typography>
-                  <strong>Manufacturer:</strong> {med.manufacturer}
-                </Typography>
-                <Typography>
-                  <strong>Description:</strong> {med.description}
-                </Typography>
-                <Typography>
-                  <strong>Price:</strong> {med.price}
-                </Typography>
-                <Typography>
-                  <strong>Batch Number:</strong> {med.batchNumber}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+          <TextField
+            fullWidth
+            label="Search by name or generic name..."
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ marginBottom: "20px" }}
+          />
+          {isAdmin && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddMedicine}
+              style={{ marginBottom: "20px" }}
+            >
+              Add Medicine
+            </Button>
+          )}
+        </div>
+        <Grid2 container spacing={3}>
+          {filteredMedicines.map((med, index) => (
+            <Grid2 item xs={12} sm={6} md={4} key={index}>
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography variant="h6">{med.name}</Typography>
+                  <Typography>
+                    <strong>Generic Name:</strong> {med.genericName}
+                  </Typography>
+                  <Typography>
+                    <strong>Manufacturer:</strong> {med.manufacturer}
+                  </Typography>
+                  <Typography>
+                    <strong>Description:</strong> {med.description}
+                  </Typography>
+                  <Typography>
+                    <strong>Price:</strong> {med.price}
+                  </Typography>
+                  <Typography>
+                    <strong>Batch Number:</strong> {med.batchNumber}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid2>
+          ))}
+        </Grid2>
+      </div>
+    </>
   );
 };
 
