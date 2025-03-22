@@ -84,39 +84,41 @@ const MedicineIndexApp = () => {
   );
 
   return (
-    <>
-      <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px" }}>
+      <div
+        style={{
+          position: "fixed",
+          top: 20,
+          left: 100,
+          right: 100,
+          background: "white",
+          zIndex: 1000,
+          padding: "10px",
+          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           Medicine Index
         </Typography>
-        <div
-          style={{
-            position: "sticky",
-            top: 0,
-            background: "white",
-            zIndex: 1000,
-            paddingBottom: "10px",
-          }}
-        >
-          <TextField
-            fullWidth
-            label="Search by name or generic name..."
-            variant="outlined"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          />
-          {isAdmin && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddMedicine}
-              style={{ marginBottom: "20px" }}
-            >
-              Add Medicine
-            </Button>
-          )}
-        </div>
+        <TextField
+          fullWidth
+          label="Search by name or generic name..."
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {isAdmin && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddMedicine}
+            style={{ marginTop: "10px" }}
+          >
+            Add Medicine
+          </Button>
+        )}
+      </div>
+      <div style={{ marginTop: "80px" }}>
         <Grid2 container spacing={3}>
           {filteredMedicines.map((med, index) => (
             <Grid2 item xs={12} sm={6} md={4} key={index}>
@@ -144,7 +146,7 @@ const MedicineIndexApp = () => {
           ))}
         </Grid2>
       </div>
-    </>
+    </div>
   );
 };
 
