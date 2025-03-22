@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Paracetamol",
+    "brand": "Medico",
+    "price": 10,
+    "inStock": true
+  },
+  {
+    "id": 2,
+    "name": "Ibuprofen",
+    "brand": "HealthCorp",
+    "price": 15,
+    "inStock": false
+  },
+  {
+    "id": 3,
+    "name": "Amoxicillin",
+    "brand": "PharmaPlus",
+    "price": 20,
+    "inStock": true
+  },
+  {
+    "id": 4,
+    "name": "Cetrizine",
+    "brand": "MediFast",
+    "price": 8,
+    "inStock": true
+  }
+]
