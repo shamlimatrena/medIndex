@@ -8,7 +8,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Grid,
+  Grid2,
   Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -21,12 +21,16 @@ const MedicineIndexPage = () => {
   const filteredMedicines = medicinesData.filter(
     (medicine) =>
       medicine.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      medicine.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      medicine.category.toLowerCase().includes(searchQuery.toLowerCase())
+      (medicine.description &&
+        medicine.description
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())) ||
+      (medicine.category &&
+        medicine.category.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container fixed="true" maxWidth="lg" sx={{ py: 4 }}>
       {/* Search Container */}
       <Paper
         elevation={3}
@@ -49,6 +53,7 @@ const MedicineIndexPage = () => {
               </InputAdornment>
             ),
           }}
+          size="medium"
         />
       </Paper>
 
@@ -60,27 +65,31 @@ const MedicineIndexPage = () => {
           borderRadius: 2,
           height: 600, // Fixed height
           overflow: "auto", // Makes it scrollable when content exceeds height
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <Grid
+        <Grid2
           container
           spacing={3}
-          justifyContent={
-            filteredMedicines.length < 3 ? "flex-start" : "center"
-          }
+          sx={{
+            justifyContent:
+              filteredMedicines.length < 3 ? "flex-start" : "center",
+            flex: 1,
+          }}
         >
           {filteredMedicines.length > 0 ? (
             filteredMedicines.map((medicine) => (
-              <Grid item xs={12} sm={6} md={4} key={medicine.id}>
+              <Grid2 item xs={12} sm={6} md={4} key={medicine.id}>
                 <Card
                   sx={{
                     height: "100%",
                     display: "flex",
                     flexDirection: "column",
-                    transition: "transform 0.3s",
+                    transition: "transform 0.2s, box-shadow 0.2s",
                     "&:hover": {
                       transform: "scale(1.03)",
-                      boxShadow: 6,
+                      boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
                     },
                   }}
                 >
@@ -92,6 +101,7 @@ const MedicineIndexPage = () => {
                       "https://via.placeholder.com/300x140?text=Medicine+Image"
                     }
                     alt={medicine.name}
+                    sx={{ objectFit: "cover" }}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
@@ -102,14 +112,14 @@ const MedicineIndexPage = () => {
                       color="text.secondary"
                       sx={{ mb: 1 }}
                     >
-                      {medicine.category}
+                      {medicine.category || "Uncategorized"}
                     </Typography>
                     <Typography variant="body2">
-                      {medicine.description}
+                      {medicine.description || "No description available"}
                     </Typography>
                   </CardContent>
                 </Card>
-              </Grid>
+              </Grid2>
             ))
           ) : (
             <Box sx={{ width: "100%", p: 3, textAlign: "center" }}>
@@ -118,7 +128,7 @@ const MedicineIndexPage = () => {
               </Typography>
             </Box>
           )}
-        </Grid>
+        </Grid2>
       </Paper>
     </Container>
   );

@@ -1,11 +1,11 @@
 import React from "react";
-import { Card, CardContent, Typography, Button, Grid } from "@mui/material";
+import { Card, CardContent, Typography, Button, Grid2 } from "@mui/material";
 
-const MedicineGrid = ({ medicines, isAdmin, onEditClick, onDeleteClick }) => {
+const MedicineGrid2 = ({ medicines, isAdmin, onEditClick, onDeleteClick }) => {
   return (
-    <Grid container spacing={3} sx={{ mt: 3 }}>
+    <Grid2 container spacing={3} sx={{ mt: 3 }}>
       {medicines.map((med) => (
-        <Grid item xs={12} sm={6} md={4} key={med.id}>
+        <Grid2 item xs={12} sm={6} md={4} key={med.id}>
           <Card>
             <CardContent>
               <Typography variant="h6">{med.name}</Typography>
@@ -32,10 +32,10 @@ const MedicineGrid = ({ medicines, isAdmin, onEditClick, onDeleteClick }) => {
               )}
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
       ))}
-    </Grid>
+    </Grid2>
   );
 };
 
-export default MedicineGrid;
+export default MedicineGrid2;
