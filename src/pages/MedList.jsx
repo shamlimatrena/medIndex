@@ -7,7 +7,6 @@ import {
   Typography,
   TextField,
   Button,
-  Grid,
   Container,
   Box,
   IconButton,
@@ -23,6 +22,7 @@ import {
   InputAdornment,
   Switch,
   FormControlLabel,
+  Grid2,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -151,6 +151,191 @@ const initialFormValues = {
   category: "",
 };
 
+// Search Component
+const SearchBar = ({
+  searchTerm,
+  setSearchTerm,
+  filterByStock,
+  setFilterByStock,
+  isAdmin,
+  onAddClick,
+}) => {
+  return (
+    <Box
+      sx={{
+        p: 3,
+        bgcolor: "white",
+        borderRadius: 2,
+        boxShadow: 1,
+        width: "100%",
+        mb: 4,
+      }}
+    >
+      <FormControl fullWidth variant="outlined">
+        <InputLabel htmlFor="search-field">Search medicines...</InputLabel>
+        <OutlinedInput
+          id="search-field"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          startAdornment={
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          }
+          label="Search medicines..."
+        />
+      </FormControl>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={filterByStock}
+              onChange={(e) => setFilterByStock(e.target.checked)}
+            />
+          }
+          label="In Stock Only"
+        />
+
+        {isAdmin && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={onAddClick}
+          >
+            Add Medicine
+          </Button>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+// Medicine Card Component
+const MedicineCard = ({ medicine, isAdmin, onEditClick, onDeleteClick }) => {
+  return (
+    <Card sx={{ height: "100%" }}>
+      <CardContent>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
+          <Typography variant="h6" component="div" gutterBottom>
+            {medicine.name}
+          </Typography>
+          <Chip
+            label={medicine.inStock ? "In Stock" : "Out of Stock"}
+            color={medicine.inStock ? "success" : "error"}
+            size="small"
+          />
+        </Box>
+
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          {medicine.genericName}
+        </Typography>
+
+        <Box sx={{ mt: 1, mb: 2 }}>
+          <Chip
+            label={medicine.category || "Uncategorized"}
+            size="small"
+            sx={{ mr: 1, bgcolor: "primary.light", color: "white" }}
+          />
+        </Box>
+
+        <Divider sx={{ my: 1.5 }} />
+
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="body2" component="div" sx={{ mb: 0.5 }}>
+            <strong>Manufacturer:</strong> {medicine.manufacturer}
+          </Typography>
+          <Typography variant="body2" component="div" sx={{ mb: 0.5 }}>
+            <strong>Description:</strong> {medicine.description}
+          </Typography>
+          <Typography variant="body2" component="div" sx={{ mb: 0.5 }}>
+            <strong>Batch Number:</strong> {medicine.batchNumber}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 2,
+          }}
+        >
+          <Typography variant="h6" color="primary.main">
+            ${medicine.price}
+          </Typography>
+
+          {isAdmin && (
+            <Box>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => onEditClick(medicine)}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => onDeleteClick(medicine.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          )}
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Medicine Grid2 Component
+const MedicineGrid = ({ medicines, isAdmin, onEditClick, onDeleteClick }) => {
+  return medicines.length === 0 ? (
+    <Box
+      sx={{
+        textAlign: "center",
+        py: 8,
+        bgcolor: "white",
+        borderRadius: 2,
+        boxShadow: 1,
+        width: "100%",
+        minHeight: "400px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="h6" color="text.secondary">
+        No medicines found matching your search criteria.
+      </Typography>
+    </Box>
+  ) : (
+    <Box sx={{ width: "100%" }}>
+      <Grid2 container spacing={3} disableEqualOverflow>
+        {medicines.map((medicine) => (
+          <Grid2 xs={12} sm={6} md={4} key={medicine.id}>
+            <MedicineCard
+              medicine={medicine}
+              isAdmin={isAdmin}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+          </Grid2>
+        ))}
+      </Grid2>
+    </Box>
+  );
+};
+
+// Main App Component
 const MedicineIndexApp = () => {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -219,34 +404,30 @@ const MedicineIndexApp = () => {
     localStorage.setItem("medicines", JSON.stringify(updatedMedicines));
   };
 
-  // Fixed filter logic
+  // Filter medicines
   const filteredMedicines = medicines.filter((med) => {
-    // Search term check - if any field contains the search term
     const searchMatch =
-      searchTerm === "" || // No search term, include all
+      searchTerm === "" ||
       med.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       med.genericName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       med.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       med.manufacturer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       med.description?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Stock filter check
     const stockMatch = !filterByStock || med.inStock;
 
-    // Both conditions must be true
     return searchMatch && stockMatch;
   });
-
-  // For debugging
-  console.log("Search term:", searchTerm);
-  console.log("Filter by stock:", filterByStock);
-  console.log("Total medicines:", medicines.length);
-  console.log("Filtered medicines:", filteredMedicines.length);
 
   return (
     <ThemeProvider theme={theme}>
       <Box
-        sx={{ flexGrow: 1, bgcolor: "background.default", minHeight: "100vh" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          bgcolor: "background.default",
+        }}
       >
         <AppBar position="fixed" color="primary" elevation={0}>
           <Toolbar>
@@ -267,171 +448,35 @@ const MedicineIndexApp = () => {
           </Toolbar>
         </AppBar>
         <Toolbar /> {/* Spacer for fixed AppBar */}
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Box
-            sx={{
-              mb: 4,
-              p: 3,
-              bgcolor: "white",
-              borderRadius: 2,
-              boxShadow: 1,
-            }}
-          >
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="search-field">
-                Search medicines...
-              </InputLabel>
-              <OutlinedInput
-                id="search-field"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                }
-                label="Search medicines..."
-              />
-            </FormControl>
+        {/* Main content area with fixed width */}
+        <Container
+          maxWidth="lg"
+          sx={{
+            mt: 4,
+            mb: 4,
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            width: "100%",
+          }}
+        >
+          {/* Search Component */}
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filterByStock={filterByStock}
+            setFilterByStock={setFilterByStock}
+            isAdmin={isAdmin}
+            onAddClick={() => handleDialogOpen()}
+          />
 
-            <Box
-              sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
-            >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={filterByStock}
-                    onChange={(e) => setFilterByStock(e.target.checked)}
-                  />
-                }
-                label="In Stock Only"
-              />
-
-              {isAdmin && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddIcon />}
-                  onClick={() => handleDialogOpen()}
-                >
-                  Add Medicine
-                </Button>
-              )}
-            </Box>
-          </Box>
-
-          {filteredMedicines.length === 0 ? (
-            <Box sx={{ textAlign: "center", py: 8 }}>
-              <Typography variant="h6" color="text.secondary">
-                No medicines found matching your search criteria.
-              </Typography>
-            </Box>
-          ) : (
-            <Grid container spacing={3}>
-              {filteredMedicines.map((med) => (
-                <Grid item xs={12} sm={6} md={4} key={med.id}>
-                  <Card>
-                    <CardContent>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <Typography variant="h6" component="div" gutterBottom>
-                          {med.name}
-                        </Typography>
-                        <Chip
-                          label={med.inStock ? "In Stock" : "Out of Stock"}
-                          color={med.inStock ? "success" : "error"}
-                          size="small"
-                        />
-                      </Box>
-
-                      <Typography
-                        variant="subtitle2"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        {med.genericName}
-                      </Typography>
-
-                      <Box sx={{ mt: 1, mb: 2 }}>
-                        <Chip
-                          label={med.category || "Uncategorized"}
-                          size="small"
-                          sx={{
-                            mr: 1,
-                            bgcolor: "primary.light",
-                            color: "white",
-                          }}
-                        />
-                      </Box>
-
-                      <Divider sx={{ my: 1.5 }} />
-
-                      <Box sx={{ mt: 2 }}>
-                        <Typography
-                          variant="body2"
-                          component="div"
-                          sx={{ mb: 0.5 }}
-                        >
-                          <strong>Manufacturer:</strong> {med.manufacturer}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          component="div"
-                          sx={{ mb: 0.5 }}
-                        >
-                          <strong>Description:</strong> {med.description}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          component="div"
-                          sx={{ mb: 0.5 }}
-                        >
-                          <strong>Batch Number:</strong> {med.batchNumber}
-                        </Typography>
-                      </Box>
-
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          mt: 2,
-                        }}
-                      >
-                        <Typography variant="h6" color="primary.main">
-                          ${med.price}
-                        </Typography>
-
-                        {isAdmin && (
-                          <Box>
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={() => handleDialogOpen(true, med)}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => handleDeleteMedicine(med.id)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        )}
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          {/* Medicine Grid2 Component */}
+          <MedicineGrid
+            medicines={filteredMedicines}
+            isAdmin={isAdmin}
+            onEditClick={(medicine) => handleDialogOpen(true, medicine)}
+            onDeleteClick={handleDeleteMedicine}
+          />
         </Container>
       </Box>
 
