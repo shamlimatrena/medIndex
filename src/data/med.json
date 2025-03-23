@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Paracetamol",
+    "genericName": "Acetaminophen",
+    "manufacturer": "ABC Pharma",
+    "description": "Pain reliever and fever reducer",
+    "price": "5",
+    "batchNumber": "12345",
+    "image": "src/img/napa1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Ibuprofen",
+    "genericName": "Ibuprofen",
+    "manufacturer": "XYZ Pharma",
+    "description": "Anti-inflammatory pain reliever",
+    "price": "8",
+    "batchNumber": "67890",
+    "image": "src/img/napa2.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Amoxicillin",
+    "genericName": "Amoxicillin",
+    "manufacturer": "MediCorp",
+    "description": "Antibiotic for bacterial infections",
+    "price": "12",
+    "batchNumber": "11223",
+    "image": "src/img/lumona.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Cetirizine",
+    "genericName": "Cetirizine Hydrochloride",
+    "manufacturer": "HealthPlus",
+    "description": "Antihistamine for allergies",
+    "price": "6",
+    "batchNumber": "44556",
+    "image": "src/img/napa2.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Metformin",
+    "genericName": "Metformin Hydrochloride",
+    "manufacturer": "DiabetiCare",
+    "description": "Medication for type 2 diabetes",
+    "price": "15",
+    "batchNumber": "77889",
+    "image": "src/img/lumona.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Paracetamol",
+    "genericName": "Acetaminophen",
+    "manufacturer": "ABC Pharma",
+    "description": "Pain reliever and fever reducer",
+    "price": "5",
+    "batchNumber": "12345",
+    "image": "src/img/napa1.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Ibuprofen",
+    "genericName": "Ibuprofen",
+    "manufacturer": "XYZ Pharma",
+    "description": "Anti-inflammatory pain reliever",
+    "price": "8",
+    "batchNumber": "67890",
+    "image": "src/img/napa2.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Amoxicillin",
+    "genericName": "Amoxicillin",
+    "manufacturer": "MediCorp",
+    "description": "Antibiotic for bacterial infections",
+    "price": "12",
+    "batchNumber": "11223",
+    "image": "src/img/napa1.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Cetirizine",
+    "genericName": "Cetirizine Hydrochloride",
+    "manufacturer": "HealthPlus",
+    "description": "Antihistamine for allergies",
+    "price": "6",
+    "batchNumber": "44556",
+    "image": "src/img/napa2.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Metformin",
+    "genericName": "Metformin Hydrochloride",
+    "manufacturer": "DiabetiCare",
+    "description": "Medication for type 2 diabetes",
+    "price": "15",
+    "batchNumber": "77889",
+    "image": "src/img/napa1.jpg"
+  }
+]
