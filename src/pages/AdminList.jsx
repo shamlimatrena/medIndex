@@ -7,8 +7,13 @@ import MedicineFormDialog from "../components/MedicineFormDialog";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialog";
 import Notification from "../components/Notification";
 
-//Dummy Data
-import Data from "../data/med.json";
+import axios from "axios";
+
+// API Route
+const API_URL = import.meta.env.VITE_API_URL;
+const username = import.meta.env.VITE_API_USERNAME;
+const password = import.meta.env.VITE_API_PASSWORD;
+const authHeader = "Basic " + btoa(`${username}:${password}`);
 
 const initialFormValues = {
   id: "",
@@ -41,10 +46,19 @@ const MedicineIndexApp = () => {
   });
 
   useEffect(() => {
-    const storedMedicines =
-      JSON.parse(localStorage.getItem("medicines")) || Data;
-    setMedicines(storedMedicines);
-    localStorage.setItem("medicines", JSON.stringify(storedMedicines));
+    axios
+      .get(API_URL)
+      .then((response) => {
+        setMedicines(response.data);
+        localStorage.setItem("medicines", JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching medicines:", error);
+
+        const storedMedicines =
+          JSON.parse(localStorage.getItem("medicines")) || [];
+        setMedicines(storedMedicines);
+      });
   }, []);
 
   const filteredMedicines = medicines.filter(
@@ -86,7 +100,6 @@ const MedicineIndexApp = () => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result);
@@ -97,56 +110,58 @@ const MedicineIndexApp = () => {
 
   const handleSaveMedicine = async () => {
     try {
-      let imagePath = formValues.image;
+      const formData = new FormData();
+      formData.append("name", formValues.name);
+      formData.append("genericName", formValues.genericName);
+      formData.append("manufacturer", formValues.manufacturer);
+      formData.append("batchNumber", formValues.batchNumber);
+      formData.append("description", formValues.description);
+      formData.append("price", formValues.price);
 
       if (imageFile) {
-        // In a real app, you would upload the file to your server here
-        // For this example, we'll simulate saving the file by generating a path
-
-        /*
-        
-        const fileName = `med_${Date.now()}_${imageFile.name.replace(
-          /\s+/g,
-          "_"
-        )}`;
-        imagePath = `/img/${fileName}`;
-        
-        */
-
-        const options = ["napa1", "napa2", "lumona"];
-        const randomString =
-          options[Math.floor(Math.random() * options.length)];
-
-        imagePath = `src/img/${randomString}.jpg`;
-
-        // In a real application, you would do something like this:
-        // const formData = new FormData();
-        // formData.append('image', imageFile);
-        // await fetch('/api/upload', { method: 'POST', body: formData });
-
-        console.log(`Image would be saved to: ${imagePath}`);
-        // For demonstration purposes, we're just setting the path without actually saving the file
+        formData.append("image", imageFile);
       }
 
-      const updatedFormValues = {
-        ...formValues,
-        image: imagePath || "/img/default-medicine.jpg",
-      };
-
-      let updatedMedicines;
+      let response;
 
       if (isEditing) {
-        updatedMedicines = medicines.map((med) =>
-          med.id === formValues.id ? updatedFormValues : med
-        );
+        response = await axios.put(`${API_URL}${formValues.id}/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: authHeader,
+          },
+        });
       } else {
-        updatedMedicines = [...medicines, updatedFormValues];
+        response = await axios.post(API_URL, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: authHeader,
+          },
+        });
       }
 
-      setMedicines(updatedMedicines);
-      localStorage.setItem("medicines", JSON.stringify(updatedMedicines));
-      handleDialogClose();
+      const newMedicine = response.data;
 
+      setMedicines((prevMedicines) =>
+        isEditing
+          ? prevMedicines.map((med) =>
+              med.id === formValues.id ? newMedicine : med
+            )
+          : [...prevMedicines, newMedicine]
+      );
+
+      localStorage.setItem(
+        "medicines",
+        JSON.stringify(
+          isEditing
+            ? medicines.map((med) =>
+                med.id === formValues.id ? newMedicine : med
+              )
+            : [...medicines, newMedicine]
+        )
+      );
+
+      handleDialogClose();
       setSnackbar({
         open: true,
         message: isEditing
@@ -178,20 +193,38 @@ const MedicineIndexApp = () => {
     });
   };
 
-  const handleDeleteMedicine = () => {
-    const id = deleteConfirmation.medicineId;
-    const updatedMedicines = medicines.filter((med) => med.id !== id);
-    setMedicines(updatedMedicines);
-    localStorage.setItem("medicines", JSON.stringify(updatedMedicines));
-    setSnackbar({
-      open: true,
-      message: "Medicine deleted successfully!",
-      severity: "success",
-    });
-    setDeleteConfirmation({
-      open: false,
-      medicineId: null,
-    });
+  const handleDeleteMedicine = async () => {
+    try {
+      const id = deleteConfirmation.medicineId;
+
+      await axios.delete(`${import.meta.env.VITE_API_URL}${id}/`, {
+        headers: {
+          Authorization: authHeader,
+        },
+      });
+
+      const updatedMedicines = medicines.filter((med) => med.id !== id);
+      setMedicines(updatedMedicines);
+      localStorage.setItem("medicines", JSON.stringify(updatedMedicines));
+
+      setSnackbar({
+        open: true,
+        message: "Medicine deleted successfully!",
+        severity: "success",
+      });
+
+      setDeleteConfirmation({
+        open: false,
+        medicineId: null,
+      });
+    } catch (error) {
+      console.error("Error deleting medicine:", error);
+      setSnackbar({
+        open: true,
+        message: "Error deleting medicine. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   const handleCloseSnackbar = () => {
