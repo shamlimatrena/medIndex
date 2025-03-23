@@ -18,6 +18,7 @@ import {
 import { styled, ThemeProvider, createTheme } from "@mui/material/styles";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import { motion } from "framer-motion";
+import {useNavigate} from "react-router-dom";
 
 // Create a custom theme with light blue colors
 const theme = createTheme({
@@ -41,10 +42,19 @@ const theme = createTheme({
 
 // Styled components
 const GradientBox = styled(Box)({
-  background: "linear-gradient(45deg, #03a9f4 30%, #00e5ff 90%)",
-  height: "100vh",
+  background: "linear-gradient(45deg,rgb(245, 246, 247) 30%, #00e5ff 90%)",
+  justifyContent: "center",
+  alignItems: "center",
   display: "flex",
   flexDirection: "column",
+  minHeight: "100vh",
+  width: "100%",
+  margin: 0,
+  padding: 0,
+  position: "absolute",
+  top: 0,
+  left: 0,
+  overflow: "auto",
 });
 
 const LogoContainer = styled(motion.div)({
@@ -66,6 +76,9 @@ function App() {
   const [openLogin, setOpenLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleOpenLogin = () => {
     setOpenLogin(true);
@@ -75,27 +88,33 @@ function App() {
     setOpenLogin(false);
   };
 
+  const handleGoToList = () => {
+    navigate('/list');
+  }
+
   const handleLogin = () => {
     // Handle login logic here
     console.log("Login attempted with:", username, password);
-    handleCloseLogin();
+
+    //place holder
+    if(username=="trena" && password=="1234") {
+      navigate('/admin-list');
+      handleCloseLogin();
+    } else {
+      setLoginError(true);
+    }
+    
   };
+
+  const handleInputChange = (e, setter) => {
+    setLoginError(false);
+    setter(e.target.value);
+  };
+
 
   return (
     <ThemeProvider theme={theme}>
       <GradientBox>
-        <AppBar position="static" color="transparent" elevation={0}>
-          <Toolbar>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, color: "white" }}
-            >
-              Med Index
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
         <Container component="main" maxWidth="sm" sx={{ mt: 8, mb: 4 }}>
           <Paper
             elevation={10}
@@ -178,6 +197,7 @@ function App() {
                     boxShadow: 3,
                     width: 220,
                   }}
+                  onClick={handleGoToList}
                 >
                   Go to Med List
                 </Button>
@@ -222,7 +242,7 @@ function App() {
             fullWidth
             variant="outlined"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => handleInputChange(e, setUsername)}
             sx={{ mb: 2 }}
           />
           <TextField
@@ -232,7 +252,9 @@ function App() {
             fullWidth
             variant="outlined"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handleInputChange(e, setPassword)}
+            error={loginError}
+            helperText={loginError ? "Invalid username or password" : ""}
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
