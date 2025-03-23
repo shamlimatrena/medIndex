@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/list" element={<List />} />
           <Route path="/admin-list" element={<AdminList />} />
-          <Route path="/landing-page" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
       </Router>
     </>
