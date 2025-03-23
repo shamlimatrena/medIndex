@@ -18,7 +18,8 @@ import {
 import { styled, ThemeProvider, createTheme } from "@mui/material/styles";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import { motion } from "framer-motion";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import LoginPopup from "../components/LoginPopup";
 
 // Create a custom theme with light blue colors
 const theme = createTheme({
@@ -74,9 +75,6 @@ const ButtonContainer = styled(Box)({
 
 function App() {
   const [openLogin, setOpenLogin] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -89,28 +87,8 @@ function App() {
   };
 
   const handleGoToList = () => {
-    navigate('/list');
-  }
-
-  const handleLogin = () => {
-    // Handle login logic here
-    console.log("Login attempted with:", username, password);
-
-    //place holder
-    if(username=="trena" && password=="1234") {
-      navigate('/admin-list');
-      handleCloseLogin();
-    } else {
-      setLoginError(true);
-    }
-    
+    navigate("/list");
   };
-
-  const handleInputChange = (e, setter) => {
-    setLoginError(false);
-    setter(e.target.value);
-  };
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -199,7 +177,7 @@ function App() {
                   }}
                   onClick={handleGoToList}
                 >
-                  Go to Med List
+                  Medicine List
                 </Button>
               </motion.div>
 
@@ -228,44 +206,8 @@ function App() {
         </Container>
       </GradientBox>
 
-      {/* Admin Login Dialog */}
-      <Dialog open={openLogin} onClose={handleCloseLogin}>
-        <DialogTitle sx={{ bgcolor: "primary.light", color: "white" }}>
-          Admin Login
-        </DialogTitle>
-        <DialogContent sx={{ pt: 2, pb: 1, px: 3, mt: 2 }}>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Username"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={username}
-            onChange={(e) => handleInputChange(e, setUsername)}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="outlined"
-            value={password}
-            onChange={(e) => handleInputChange(e, setPassword)}
-            error={loginError}
-            helperText={loginError ? "Invalid username or password" : ""}
-          />
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button onClick={handleCloseLogin} variant="text">
-            Cancel
-          </Button>
-          <Button onClick={handleLogin} variant="contained">
-            Login
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <LoginPopup openLogin={openLogin} 
+      handleCloseLogin={handleCloseLogin} />
     </ThemeProvider>
   );
 }
