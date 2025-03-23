@@ -1,7 +1,14 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
+import { HomeIcon } from "lucide-react";
 
 const Header = ({ isAdmin, searchTerm, setSearchTerm, handleDialogOpen }) => {
+  const navigate = useNavigate();
+
+  const handleGoToLandingPage = () => {
+    navigate("/");
+  };
   return (
     <Container
       fixed
@@ -27,20 +34,27 @@ const Header = ({ isAdmin, searchTerm, setSearchTerm, handleDialogOpen }) => {
           mt: 4,
         }}
       >
-        <Typography
-          variant="h4"
+        <Button
+          variant="text"
+          onClick={handleGoToLandingPage}
           sx={{
             color: "white",
             fontWeight: "bold",
+            fontSize: "20px",
             letterSpacing: "1px",
             textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)",
             position: "relative",
             display: "inline-block",
             px: 2,
+            transition: "all 0.3s ease-in-out", 
+            "&:hover": {
+              boxShadow: "0px 4px 15px rgba(255, 255, 255, 0.7)", 
+              transform: "translateY(-2px)",
+            },
           }}
         >
           Medicine Index
-        </Typography>
+        </Button>
         {isAdmin && (
           <Button
             variant="contained"
