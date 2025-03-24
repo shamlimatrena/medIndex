@@ -15,41 +15,41 @@ This is a simple project where visitor can search and view a list of medicines i
 ## Project Functionalities
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_1.jpg" alt="Description" width="500"/>
   <figcaption>Landing Page</figcaption>
+  <img src="public/assets/medIndex_ss_1.jpg" alt="Description" width="500"/> 
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_3.jpg" alt="Description" width="500"/>
   <figcaption>Medicine List Page</figcaption>
+  <img src="public/assets/medIndex_ss_3.jpg" alt="Description" width="500"/>
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_2.jpg" alt="Description" width="500"/>
   <figcaption>Medicine Search Functionality</figcaption>
+  <img src="public/assets/medIndex_ss_2.jpg" alt="Description" width="500"/>
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_4.jpg" alt="Description" width="500"/>
   <figcaption>Admin Login</figcaption>
+  <img src="public/assets/medIndex_ss_4.jpg" alt="Description" width="500"/>
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_5.jpg" alt="Description" width="500"/>
   <figcaption>Admin Dashboard</figcaption>
+  <img src="public/assets/medIndex_ss_5.jpg" alt="Description" width="500"/>
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_6.jpg" alt="Description" width="500"/>
   <figcaption>Create Medicine Functionality</figcaption>
+  <img src="public/assets/medIndex_ss_6.jpg" alt="Description" width="500"/>
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_7.jpg" alt="Description" width="500"/>
   <figcaption>Edit Medicine Functionality</figcaption>
+  <img src="public/assets/medIndex_ss_7.jpg" alt="Description" width="500"/>
 </figure>
 
 <figure style="text-align: center;">
-  <img src="public/assets/medIndex_ss_8.jpg" alt="Description" width="500"/>
   <figcaption>Delete Medicine Functionality</figcaption>
+  <img src="public/assets/medIndex_ss_8.jpg" alt="Description" width="500"/>
 </figure>
