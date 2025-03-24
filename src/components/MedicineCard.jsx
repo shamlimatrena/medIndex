@@ -64,12 +64,14 @@ const TruncatedText = ({ text, variant, sx, lines = 1 }) => {
   );
 };
 
-const getRandomDefaultImage = () => {
-  const randomIndex = Math.floor(Math.random() * 3) + 1;
-  return `/img/default_med_${randomIndex}.jpg`;
-};
 
 const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
+  
+  const getRandomDefaultImage = () => {
+    const randomIndex = Math.floor(Math.random() * 3) + 1;
+    return `/img/default_med_${randomIndex}.jpg`;
+  };
+  
   const imageUrl = medicine.image_url || getRandomDefaultImage();
 
   return (
