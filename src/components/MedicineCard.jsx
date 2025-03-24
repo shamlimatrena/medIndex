@@ -17,6 +17,8 @@ import {
   LocalPharmacy as MedicineIcon,
 } from "@mui/icons-material";
 
+const IMG_URL = import.meta.env.VITE_IMG_PATH;
+
 const TruncatedText = ({ text, variant, sx, lines = 1 }) => {
   const textRef = useRef(null);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -70,7 +72,9 @@ const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
     return `/img/default_med_${randomIndex}.jpg`;
   }, []);
 
-  const imageUrl = medicine.image_url || defaultImage;
+  const imageUrl = medicine.image
+    ? IMG_URL + medicine.image
+    : medicine.image_url || defaultImage;
 
   return (
     <Card
