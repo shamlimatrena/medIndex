@@ -64,7 +64,14 @@ const TruncatedText = ({ text, variant, sx, lines = 1 }) => {
   );
 };
 
+const getRandomDefaultImage = () => {
+  const randomIndex = Math.floor(Math.random() * 3) + 1;
+  return `/img/default_med_${randomIndex}.jpg`;
+};
+
 const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
+  const imageUrl = medicine.image_url || getRandomDefaultImage();
+
   return (
     <Card
       sx={{
@@ -88,7 +95,7 @@ const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
           <CardMedia
             component="img"
             height="160"
-            image={medicine.image_url}
+            image={imageUrl}
             alt={medicine.name}
             sx={{ borderTopLeftRadius: 12, borderTopRightRadius: 12 }}
           />
