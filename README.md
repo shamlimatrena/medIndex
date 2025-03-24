@@ -1,12 +1,13 @@
-# React + Vite
+# medIndex
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple project where visitor can search and view a list of medicines in the system and admin can access dashboard.
 
-Currently, two official plugins are available:
+## Steps to run the project locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- system must have node js & npm installed
+- clone the repository, go to project directory, run following commads sequentially
+- `npm install` -> to install all the dependencies
+- `npm run dev` -> will run the frontend server
+- create a .env file and put the backend server URL as
+  `VITE_API_URL=http://127.0.0.1:8000/api/meds/`
+  `VITE_API_LOGIN_URL=http://127.0.0.1:8000/api/login/`
