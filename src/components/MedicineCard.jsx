@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -7,6 +7,7 @@ import {
   CardActionArea,
   IconButton,
   Box,
+  Tooltip,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -16,13 +17,60 @@ import {
   LocalPharmacy as MedicineIcon,
 } from "@mui/icons-material";
 
+const TruncatedText = ({ text, variant, sx, lines = 1 }) => {
+  const textRef = useRef(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  useEffect(() => {
+    const checkTruncation = () => {
+      const element = textRef.current;
+      if (!element) return;
+
+      if (lines === 1) {
+        setIsTruncated(element.scrollWidth > element.clientWidth);
+      } else {
+        setIsTruncated(element.scrollHeight > element.clientHeight);
+      }
+    };
+
+    checkTruncation();
+    window.addEventListener("resize", checkTruncation);
+    return () => window.removeEventListener("resize", checkTruncation);
+  }, [text, lines]);
+
+  const textStyle =
+    lines === 1
+      ? {
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          ...sx,
+        }
+      : {
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: lines,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          ...sx,
+        };
+
+  return (
+    <Tooltip title={text} placement="top" disableHoverListener={!isTruncated}>
+      <Typography variant={variant} sx={textStyle} ref={textRef}>
+        {text}
+      </Typography>
+    </Tooltip>
+  );
+};
+
 const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
   return (
     <Card
       sx={{
         maxWidth: 300,
         minWidth: 300,
-        minHeight: 300,
+        height: 415,
         borderRadius: 3,
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         transition: "0.3s",
@@ -32,62 +80,103 @@ const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
         },
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        overflow: "hidden",
       }}
     >
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="160"
-          image={medicine.image}
-          alt={medicine.name}
-          sx={{ borderTopLeftRadius: 12, borderTopRightRadius: 12 }}
-        />
-        <CardContent sx={{ padding: 2, userSelect: "text" }}>
-          <Typography
-            gutterBottom
+      <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <Box sx={{ position: "relative" }}>
+          <CardMedia
+            component="img"
+            height="160"
+            image={medicine.image}
+            alt={medicine.name}
+            sx={{ borderTopLeftRadius: 12, borderTopRightRadius: 12 }}
+          />
+
+          <CardActionArea
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        </Box>
+
+        <CardContent
+          sx={{
+            padding: 2,
+            userSelect: "text",
+            overflow: "hidden",
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <TruncatedText
+            text={medicine.name}
             variant="h6"
-            component="div"
-            sx={{ fontWeight: "bold" }}
-          >
-            {medicine.name}
-          </Typography>
-          <Typography
+            sx={{ fontWeight: "bold", mb: 1 }}
+          />
+
+          <TruncatedText
+            text={`${medicine.genericName} | ${medicine.manufacturer}`}
             variant="subtitle2"
             sx={{ color: "text.secondary", mb: 1 }}
-          >
-            {medicine.genericName} | {medicine.manufacturer}
-          </Typography>
-          <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}>
-            {medicine.description}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "primary.main", fontWeight: 600 }}
-          >
-            Unit Price: {medicine.price}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{ display: "block", color: "text.disabled", mt: 0.5 }}
-          >
-            Batch #{medicine.batchNumber}
-          </Typography>
+          />
+
+          <Box sx={{ flex: 1, overflow: "hidden", mb: 1 }}>
+            <TruncatedText
+              text={medicine.description}
+              variant="body2"
+              sx={{ color: "text.secondary", height: "100%" }}
+              lines={2}
+            />
+          </Box>
+
+          <Box>
+            <TruncatedText
+              text={`Unit Price: ${medicine.price}`}
+              variant="body2"
+              sx={{ color: "primary.main", fontWeight: 600 }}
+            />
+
+            <TruncatedText
+              text={`Batch #${medicine.batchNumber}`}
+              variant="caption"
+              sx={{ display: "block", color: "text.disabled", mt: 0.5 }}
+            />
+          </Box>
         </CardContent>
-      </CardActionArea>
+      </Box>
+
       {isAdmin && (
-        <Box sx={{ mt: 1, display: "flex", justifyContent: "flex-end" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 1,
+            borderTop: "1px solid rgba(0,0,0,0.05)",
+          }}
+        >
           <IconButton
             size="small"
             color="primary"
-            onClick={() => onEdit(medicine)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(medicine);
+            }}
           >
             <EditIcon />
           </IconButton>
           <IconButton
             size="small"
             color="error"
-            onClick={() => onDelete(medicine.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(medicine.id);
+            }}
           >
             <DeleteIcon />
           </IconButton>
