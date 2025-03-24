@@ -88,7 +88,7 @@ const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
           <CardMedia
             component="img"
             height="160"
-            image={medicine.image}
+            image={medicine.image_url}
             alt={medicine.name}
             sx={{ borderTopLeftRadius: 12, borderTopRightRadius: 12 }}
           />

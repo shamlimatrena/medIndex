@@ -104,7 +104,7 @@ const MedicineIndexApp = () => {
     if (isEdit && medicine) {
       setFormValues(medicine);
       setIsEditing(true);
-      setPreviewUrl(medicine.image);
+      setPreviewUrl(medicine.image_url);
     } else {
       setFormValues({
         ...initialFormValues,
