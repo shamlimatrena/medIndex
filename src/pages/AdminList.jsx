@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 //Component section
 import Header from "../components/Header";
@@ -6,6 +7,7 @@ import MedicineList from "../components/MedicineList";
 import MedicineFormDialog from "../components/MedicineFormDialog";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialog";
 import Notification from "../components/Notification";
+import LoginPopup from "../components/LoginPopup";
 
 import axios from "axios";
 
@@ -30,11 +32,12 @@ const MedicineIndexApp = () => {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [formValues, setFormValues] = useState(initialFormValues);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -45,7 +48,18 @@ const MedicineIndexApp = () => {
     medicineId: null,
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const storedIsAdmin = sessionStorage.getItem("isAdmin");
+    if (storedIsAdmin === "true") {
+      setIsAdmin(true);
+    }
+
+    if (!storedIsAdmin) {
+      setShowLoginPopup(true);
+    }
+
     axios
       .get(API_URL)
       .then((response) => {
@@ -59,7 +73,19 @@ const MedicineIndexApp = () => {
           JSON.parse(localStorage.getItem("medicines")) || [];
         setMedicines(storedMedicines);
       });
-  }, []);
+  }, [navigate]);
+
+  const handleCloseLogin = () => {
+    const isNowAdmin = sessionStorage.getItem("isAdmin") === "true";
+
+    if (!isNowAdmin) {
+      navigate("/");
+    } else {
+      setIsAdmin(true);
+    }
+
+    setShowLoginPopup(false);
+  };
 
   const filteredMedicines = medicines.filter(
     (med) =>
@@ -269,6 +295,13 @@ const MedicineIndexApp = () => {
         snackbar={snackbar}
         handleCloseSnackbar={handleCloseSnackbar}
       />
+
+      {showLoginPopup && (
+        <LoginPopup
+          openLogin={showLoginPopup}
+          handleCloseLogin={handleCloseLogin}
+        />
+      )}
     </>
   );
 };

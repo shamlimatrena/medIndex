@@ -8,23 +8,40 @@ import {
   TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_LOGIN_URL;
 
 const LoginPopup = ({ openLogin, handleCloseLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
-  
+
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Handle login logic here
-    console.log("Login attempted with:", username, password);
+  const handleLogin = async () => {
+    try {
+      const authHeader = "Basic " + btoa(`${username}:${password}`);
 
-    //place holder
-    if (username == "trena" && password == "1234") {
-      navigate("/admin-list");
-      handleCloseLogin();
-    } else {
+      const response = await axios.post(
+        API_URL,
+        {},
+        {
+          headers: {
+            Authorization: authHeader,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        sessionStorage.setItem("isAdmin", "true");
+        navigate("/admin-list");
+        handleCloseLogin();
+      } else {
+        setLoginError(true);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
       setLoginError(true);
     }
   };
