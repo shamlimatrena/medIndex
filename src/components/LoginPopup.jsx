@@ -34,7 +34,12 @@ const LoginPopup = ({ openLogin, handleCloseLogin }) => {
       );
 
       if (response.status === 200) {
+        const combinedAuth = username + ":::" + password;
+        const encodedAuth = btoa(combinedAuth);
+
         sessionStorage.setItem("isAdmin", "true");
+        sessionStorage.setItem("adminAuth", encodedAuth);
+
         navigate("/admin-list");
         handleCloseLogin();
       } else {

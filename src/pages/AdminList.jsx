@@ -13,9 +13,6 @@ import axios from "axios";
 
 // API Route
 const API_URL = import.meta.env.VITE_API_URL;
-const username = import.meta.env.VITE_API_USERNAME;
-const password = import.meta.env.VITE_API_PASSWORD;
-const authHeader = "Basic " + btoa(`${username}:${password}`);
 
 const initialFormValues = {
   id: "",
@@ -38,6 +35,7 @@ const MedicineIndexApp = () => {
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [authHeader, setAuthHeader] = useState("");
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -56,7 +54,16 @@ const MedicineIndexApp = () => {
       setIsAdmin(true);
     }
 
-    if (!storedIsAdmin) {
+    //Creds
+    const encodedAuth = sessionStorage.getItem("adminAuth");
+    const decodedAuth = atob(encodedAuth);
+    const [storedUsername, storedPassword] = decodedAuth.split(":::");
+
+    const storedAuthHeader =
+      "Basic " + btoa(`${storedUsername}:${storedPassword}`);
+    setAuthHeader(storedAuthHeader);
+
+    if (!storedIsAdmin || !encodedAuth) {
       setShowLoginPopup(true);
     }
 
