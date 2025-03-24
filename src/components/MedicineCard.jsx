@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -64,15 +64,13 @@ const TruncatedText = ({ text, variant, sx, lines = 1 }) => {
   );
 };
 
-
 const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
-  
-  const getRandomDefaultImage = () => {
+  const defaultImage = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * 3) + 1;
     return `/img/default_med_${randomIndex}.jpg`;
-  };
-  
-  const imageUrl = medicine.image_url || getRandomDefaultImage();
+  }, []);
+
+  const imageUrl = medicine.image_url || defaultImage;
 
   return (
     <Card
