@@ -15,8 +15,12 @@ const MedicineIndexApp = () => {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    //loading state
+    setIsLoading(true);
+
     axios
       .get(API_URL)
       .then((response) => {
@@ -29,6 +33,9 @@ const MedicineIndexApp = () => {
         const storedMedicines =
           JSON.parse(localStorage.getItem("medicines")) || [];
         setMedicines(storedMedicines);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -46,7 +53,11 @@ const MedicineIndexApp = () => {
         setSearchTerm={setSearchTerm}
       />
 
-      <MedicineList filteredMedicines={filteredMedicines} isAdmin={isAdmin} />
+      <MedicineList
+        filteredMedicines={filteredMedicines}
+        isAdmin={isAdmin}
+        isLoading={isLoading}
+      />
     </>
   );
 };

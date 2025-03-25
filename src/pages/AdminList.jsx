@@ -36,6 +36,7 @@ const MedicineIndexApp = () => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [authHeader, setAuthHeader] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -49,6 +50,9 @@ const MedicineIndexApp = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    //loading state
+    setIsLoading(true);
+
     const storedIsAdmin = sessionStorage.getItem("isAdmin");
     if (storedIsAdmin === "true") {
       setIsAdmin(true);
@@ -79,6 +83,9 @@ const MedicineIndexApp = () => {
         const storedMedicines =
           JSON.parse(localStorage.getItem("medicines")) || [];
         setMedicines(storedMedicines);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [navigate]);
 
@@ -278,6 +285,7 @@ const MedicineIndexApp = () => {
         isAdmin={isAdmin}
         handleDialogOpen={handleDialogOpen}
         handleDeleteConfirm={handleDeleteConfirm}
+        isLoading={isLoading}
       />
 
       <MedicineFormDialog
