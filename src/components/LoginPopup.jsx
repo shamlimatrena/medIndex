@@ -16,10 +16,14 @@ const LoginPopup = ({ openLogin, handleCloseLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    //loading state for button
+    setIsLoading(true);
+
     try {
       const authHeader = "Basic " + btoa(`${username}:${password}`);
 
@@ -48,6 +52,8 @@ const LoginPopup = ({ openLogin, handleCloseLogin }) => {
     } catch (error) {
       console.error("Login failed:", error);
       setLoginError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,7 +95,7 @@ const LoginPopup = ({ openLogin, handleCloseLogin }) => {
         <Button onClick={handleCloseLogin} variant="text">
           Cancel
         </Button>
-        <Button onClick={handleLogin} variant="contained">
+        <Button onClick={handleLogin} loading={isLoading} variant="contained">
           Login
         </Button>
       </DialogActions>

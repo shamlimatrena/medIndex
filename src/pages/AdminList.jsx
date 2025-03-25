@@ -37,6 +37,7 @@ const MedicineIndexApp = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [authHeader, setAuthHeader] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -149,6 +150,9 @@ const MedicineIndexApp = () => {
   };
 
   const handleSaveMedicine = async () => {
+    //loading button state
+    setIsLoadingButton(true);
+
     try {
       const formData = new FormData();
       formData.append("name", formValues.name);
@@ -216,6 +220,8 @@ const MedicineIndexApp = () => {
         message: "Error saving medicine. Please try again.",
         severity: "error",
       });
+    } finally {
+      setIsLoadingButton(false);
     }
   };
 
@@ -234,6 +240,9 @@ const MedicineIndexApp = () => {
   };
 
   const handleDeleteMedicine = async () => {
+    //button loading state
+    setIsLoadingButton(true);
+
     try {
       const id = deleteConfirmation.medicineId;
 
@@ -264,6 +273,8 @@ const MedicineIndexApp = () => {
         message: "Error deleting medicine. Please try again.",
         severity: "error",
       });
+    } finally {
+      setIsLoadingButton(false);
     }
   };
 
@@ -298,12 +309,14 @@ const MedicineIndexApp = () => {
         imageFile={imageFile}
         previewUrl={previewUrl}
         handleSaveMedicine={handleSaveMedicine}
+        isLoadingButton={isLoadingButton}
       />
 
       <DeleteConfirmationDialog
         open={deleteConfirmation.open}
         handleDeleteCancel={handleDeleteCancel}
         handleDeleteMedicine={handleDeleteMedicine}
+        isLoadingButton={isLoadingButton}
       />
 
       <Notification

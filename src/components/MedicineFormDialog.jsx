@@ -23,6 +23,7 @@ import {
     imageFile,
     previewUrl,
     handleSaveMedicine,
+    isLoadingButton,
   }) => {
     return (
       <Dialog
@@ -143,6 +144,7 @@ import {
           </Button>
           <Button
             onClick={handleSaveMedicine}
+            loading={isLoadingButton}
             color="primary"
             variant="contained"
             disabled={!formValues.name}
