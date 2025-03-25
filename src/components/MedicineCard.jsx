@@ -73,7 +73,7 @@ const MedicineCard = ({ medicine, isAdmin, onEdit, onDelete }) => {
     return `/img/default_med_${randomIndex}.jpg`;
   }, []);
 
-  const full_img_path = medicine.image_url ? IMG_PATH + medicine.image_url : null;
+  const full_img_path = medicine.image ? IMG_PATH + medicine.image : null;
   const imageUrl = full_img_path || defaultImage;
 
   return (
